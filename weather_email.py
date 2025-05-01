@@ -23,12 +23,24 @@ def send_weather():
         message = MIMEText(f'City: {data['name']}\nTemperature: {data['main']['temp'] - 273.15:.1f}°C\nWeather description: {data['weather'][0]['description'].title()}\nHumidity: {data['main']['humidity']}%')
         message['Subject'] = 'Weather info to you!'
         message['From'] = 'kirwl. who'
-        message['To'] = my_email
-        host = smtplib.SMTP(host='smtp.gmail.com', port=587)
-        host.starttls()
-        host.login(my_email, smtp_password)
-        host.sendmail(my_email, message['To'], message.as_string())
-        host.quit()
+        user_data = input('Wanna add your email and password for send it to you? (yes, no)')
+        if user_data.lower().strip() == 'yes':
+            email = input('Copy your email and paste here (example: example@example.com): ')
+            app_password = input('Enter your app password here: ')
+            
+            message['To'] = email
+            host = smtplib.SMTP(host='smtp.gmail.com', port=587)
+            host.starttls()
+            host.login(email, app_password)
+            host.sendmail(email, message['To'], message.as_string())
+            host.quit()
+        else:
+            message['To'] = my_email
+            host = smtplib.SMTP(host='smtp.gmail.com', port=587)
+            host.starttls()
+            host.login(my_email, smtp_password)
+            host.sendmail(my_email, message['To'], message.as_string())
+            host.quit()
     else:
         print(f'Error: {response.status_code}')
 
